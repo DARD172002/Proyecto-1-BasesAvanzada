@@ -1,0 +1,38 @@
+services:
+  sqlnode1:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlnode1
+    ports:
+      - "1432:1432"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Light16082002."
+    volumes:
+      - sqlnode1_data:/var/opt/mssql
+    networks:
+      - sqlnetwork
+  sqlnode2:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlnode2
+    ports:
+      - "1435:1435"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Light16082002."
+    volumes:
+      - sqlnode2_data:/var/opt/mssql
+    networks:
+      - sqlnetwork
+
+
+
+networks:
+  sqlnetwork:
+    driver: bridge
+volumes:
+  sqlnode1_data:
+  sqlnode2_data:
+  
+    
+
+   
