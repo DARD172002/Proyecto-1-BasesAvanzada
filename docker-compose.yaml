@@ -3,7 +3,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlnode1
     ports:
-      - "1432:1432"
+      - "1432:1433"
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "Light16082002."
@@ -15,7 +15,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlnode2
     ports:
-      - "1435:1435"
+      - "1435:1433"
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "Light16082002."
