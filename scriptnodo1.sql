@@ -20,6 +20,7 @@ CREATE TABLE Users(
 CREATE TABLE Orders(
     ID_Order INT PRIMARY KEY IDENTITY(1,1),
     ID_User INT NOT NULL,
+    ID_Region INT NOT NULL,
     State_Order NVARCHAR(100) NOT NULL,
     Date_Order DATE NOT NULL
 )
@@ -51,7 +52,7 @@ ALTER TABLE Inventory ADD CONSTRAINT FK_ID_Product FOREIGN KEY(ID_Product) REFER
 ALTER TABLE Orders ADD CONSTRAINT FK_ID_User FOREIGN KEY(ID_User) REFERENCES Users(ID_User);
 ALTER TABLE Product_Order ADD CONSTRAINT FK_Product_Order_ID_Product FOREIGN KEY(ID_Product) REFERENCES Product(ID_Product);
 ALTER TABLE Product_Order  ADD CONSTRAINT FK_Product_Order_ID_Order FOREIGN KEY (ID_Order) REFERENCES Orders(ID_Order);
-
+ALTER TABLE Orders ADD CONSTRAINT FK_Orders_ID_Region FOREIGN KEY(ID_Region) REFERENCES  Regions(ID_Region)
 
 INSERT INTO Regions (Name_Region, Country)
 VALUES 
@@ -90,13 +91,14 @@ END;
 
 
 
+-- Generar órdenes
 SET @i = 1;
-
 WHILE @i <= 10000
 BEGIN
-    INSERT INTO Orders (ID_User, State_Order, Date_Order)
+    INSERT INTO Orders (ID_User, ID_Region, State_Order, Date_Order)
     VALUES (
         @i % 10000 + 1, -- Usuario asociado secuencialmente
+        @i % 5 + 1, -- Región secuencial entre 1 y 5 (de acuerdo a la cantidad de regiones)
         CASE (@i % 3)
             WHEN 0 THEN 'Pending'
             WHEN 1 THEN 'Completed'
@@ -153,7 +155,3 @@ DELETE FROM Inventory WHERE ID_Region NOT IN (1,2,3);
 
 Alter table Users drop COLUMN Password_User
 
-
-
-CREATE VIEW Unified_User AS SELECT * , NULL AS Password_User FROM Users UNION ALL
-SELECT ID_user, NULL AS Name_User, NULL AS Email, Password_User  FROM SQLServer_Node2.GlobalInventoryDBExample.dbo.Users;
