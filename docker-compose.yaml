@@ -11,6 +11,7 @@ services:
       - sqlnode1_data:/var/opt/mssql
     networks:
       - sqlnetwork
+    mem_limit: 4g  # Aumentar la memoria disponible para el contenedor
   sqlnode2:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlnode2
@@ -23,6 +24,7 @@ services:
       - sqlnode2_data:/var/opt/mssql
     networks:
       - sqlnetwork
+    mem_limit: 4g  # Aumentar la memoria disponible para el contenedor
 
 
 
