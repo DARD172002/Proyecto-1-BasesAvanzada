@@ -1,8 +1,9 @@
 
-
+--scrip de creacion de la base de datos nodo2
 CREATE DATABASE GlobalInventoryDBExample;
+go
 use GlobalInventoryDBExample
-
+go
 CREATE TABLE Regions
 (
     ID_Region INT PRIMARY KEY IDENTITY(1,1),
@@ -47,6 +48,7 @@ CREATE TABLE Product_Order(
     Amount INT NOT NULL,
     PRIMARY KEY(ID_Order,ID_Product)
 )
+go
 ALTER TABLE Inventory ADD CONSTRAINT FK_ID_Region FOREIGN KEY(ID_Region) REFERENCES Regions(ID_Region);
 ALTER TABLE Inventory ADD CONSTRAINT FK_ID_Product FOREIGN KEY(ID_Product) REFERENCES  Product(ID_Product);
 ALTER TABLE Orders ADD CONSTRAINT FK_ID_User FOREIGN KEY(ID_User) REFERENCES Users(ID_User);
@@ -139,7 +141,7 @@ END;
 
 
 
-
+go
 -- Fragmentacion horizontal por region Tabla Inventory
 DELETE FROM Inventory WHERE ID_Region NOT IN (4,5);
 
@@ -147,3 +149,5 @@ DELETE FROM Inventory WHERE ID_Region NOT IN (4,5);
 -- Fragmentacion vertical 
 Alter table Users drop COLUMN Name_User
 ALter table Users drop COLUMN Email
+
+

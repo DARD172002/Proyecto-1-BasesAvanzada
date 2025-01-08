@@ -6,4 +6,6 @@ from Users u LEFT JOIN SQLServer_Node2.GlobalInventoryDBExample.dbo.Users p ON u
 
 
 
-
+--Vista para unir datos de la fragmetncion
+CREATE VIEW Unified_Inventory AS SELECT *
+from Inventory UNION ALL  select * from SQLServer_Node2.GlobalInventoryDBExample.dbo.Inventory

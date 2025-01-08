@@ -1,22 +1,23 @@
 
 
 CREATE DATABASE GlobalInventoryDBExample;
+GO
 use GlobalInventoryDBExample
-
+GO
 CREATE TABLE Regions
 (
     ID_Region INT PRIMARY KEY IDENTITY(1,1),
     Name_Region NVARCHAR(100) NOT NULL,
     Country NVARCHAR(100) NOT NULL
 );
-
+GO
 CREATE TABLE Users(
     ID_User INT PRIMARY KEY IDENTITY(1,1),
     Name_User NVARCHAR(100) NOT NULL, 
     Email  NVARCHAR(100) NOT NULL,
     Password_User NVARCHAR(100) NOT NULL
 );
-
+GO
 CREATE TABLE Orders(
     ID_Order INT PRIMARY KEY IDENTITY(1,1),
     ID_User INT NOT NULL,
@@ -25,7 +26,7 @@ CREATE TABLE Orders(
     Date_Order DATE NOT NULL
 )
 
-
+GO
 CREATE TABLE Inventory(
     ID_Region INT NOT NULL,
     ID_Product INT NOT NULL,
@@ -34,19 +35,20 @@ CREATE TABLE Inventory(
 
 );
 
-
+GO
 CREATE TABLE Product(
     ID_Product INT PRIMARY KEY IDENTITY(1,1),
     Name_Product NVARCHAR(100) NOT NULL,
     Price INT NOT NULL
 )
-
+GO
 CREATE TABLE Product_Order(
     ID_Product INT NOT NULL,
     ID_Order INT NOT NULL,
     Amount INT NOT NULL,
     PRIMARY KEY(ID_Order,ID_Product)
 )
+GO
 ALTER TABLE Inventory ADD CONSTRAINT FK_ID_Region FOREIGN KEY(ID_Region) REFERENCES Regions(ID_Region);
 ALTER TABLE Inventory ADD CONSTRAINT FK_ID_Product FOREIGN KEY(ID_Product) REFERENCES  Product(ID_Product);
 ALTER TABLE Orders ADD CONSTRAINT FK_ID_User FOREIGN KEY(ID_User) REFERENCES Users(ID_User);
@@ -54,6 +56,7 @@ ALTER TABLE Product_Order ADD CONSTRAINT FK_Product_Order_ID_Product FOREIGN KEY
 ALTER TABLE Product_Order  ADD CONSTRAINT FK_Product_Order_ID_Order FOREIGN KEY (ID_Order) REFERENCES Orders(ID_Order);
 ALTER TABLE Orders ADD CONSTRAINT FK_Orders_ID_Region FOREIGN KEY(ID_Region) REFERENCES  Regions(ID_Region)
 
+GO
 INSERT INTO Regions (Name_Region, Country)
 VALUES 
 ('North America', 'USA'),
