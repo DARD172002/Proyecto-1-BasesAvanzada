@@ -4,13 +4,15 @@ CREATE DATABASE GlobalInventoryDBExample;
 go
 use GlobalInventoryDBExample
 go
+
+-- TABLA DE REGIONES
 CREATE TABLE Regions
 (
     ID_Region INT PRIMARY KEY IDENTITY(1,1),
     Name_Region NVARCHAR(100) NOT NULL,
     Country NVARCHAR(100) NOT NULL
 );
-
+-- TABLA USUARIOS
 CREATE TABLE Users(
     ID_User INT PRIMARY KEY IDENTITY(1,1),
     Name_User NVARCHAR(100) NOT NULL, 
@@ -18,6 +20,7 @@ CREATE TABLE Users(
     Password_User NVARCHAR(100) NOT NULL
 );
 
+-- TABLA DE PEDIDOS
 CREATE TABLE Orders(
     ID_Order INT PRIMARY KEY IDENTITY(1,1),
     ID_User INT NOT NULL,
@@ -26,7 +29,7 @@ CREATE TABLE Orders(
     Date_Order DATE NOT NULL
 )
 
-
+-- TABLA DE INVENTORY
 CREATE TABLE Inventory(
     ID_Region INT NOT NULL,
     ID_Product INT NOT NULL,
@@ -34,13 +37,16 @@ CREATE TABLE Inventory(
     PRIMARY KEY (ID_Product,ID_Region)
 
 );
-
+ 
+ -- TABLE DE PRODUCT
 
 CREATE TABLE Product(
     ID_Product INT PRIMARY KEY IDENTITY(1,1),
     Name_Product NVARCHAR(100) NOT NULL,
     Price INT NOT NULL
 )
+
+-- TABLA DE PRODUCT_ORDER
 
 CREATE TABLE Product_Order(
     ID_Product INT NOT NULL,
@@ -56,7 +62,7 @@ ALTER TABLE Product_Order ADD CONSTRAINT FK_Product_Order_ID_Product FOREIGN KEY
 ALTER TABLE Product_Order  ADD CONSTRAINT FK_Product_Order_ID_Order FOREIGN KEY (ID_Order) REFERENCES Orders(ID_Order);
 ALTER TABLE Orders ADD CONSTRAINT FK_Orders_ID_Region FOREIGN KEY(ID_Region) REFERENCES  Regions(ID_Region)
 
-
+-- LLENANDO LA BASE DE DATOS
 INSERT INTO Regions (Name_Region, Country)
 VALUES 
 ('North America', 'USA'),
@@ -99,7 +105,7 @@ BEGIN
     INSERT INTO Orders (ID_User, ID_Region, State_Order, Date_Order)
     VALUES (
         @i % 10000 + 1, -- Usuario asociado secuencialmente
-        @i % 5 + 1, -- Región secuencial entre 1 y 5 (de acuerdo a la cantidad de regiones)
+        @i % 5 + 1, -- Región secuencial entre 1 y 5 
         CASE (@i % 3)
             WHEN 0 THEN 'Pending'
             WHEN 1 THEN 'Completed'

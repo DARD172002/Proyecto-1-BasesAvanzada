@@ -1,4 +1,16 @@
 
+
+
+--stata view se crea en el nodo1
+CREATE VIEW Unified_User AS SELECT
+u.ID_user, u.Name_User, U.Email, p.Password_User
+from Users u LEFT JOIN SQLServer_Node2.GlobalInventoryDBExample.dbo.Users p ON u.ID_user= p.ID_user
+go
+
+--Vista para unir datos de la fragmetncion
+CREATE VIEW Unified_Inventory AS SELECT *
+from Inventory UNION ALL  select * from SQLServer_Node2.GlobalInventoryDBExample.dbo.Inventory
+go
 --script de configuracion
 exec sp_configure 'show advanced options', 1;
 go
@@ -17,47 +29,33 @@ go
 use master
 go
 EXEC sp_adddistributor @distributor = @@SERVERNAME, @password = 'Light16082002.';
---en caso de eliminar el distribuidor
-EXEC sp_dropdistributor @no_checks = 1, @ignore_distributor = 1;
 
-
--- configuracion transaccional
-
-
---configurando la activacion del SQLServerAgent para automatizar los trabajos de la replicacion
---en una terminal escribe sudo docker exec -it nombredelnodo bash
---dentro del contenedor ejecutas /opt/mssql/bin/mssql-conf set sqlagent.enabled true
---sales del contenedor y escribes sudo docker restart nombredelnodo
-
+go
 --para verificar si el SQLServerAgent esta en estado running
 EXEC xp_servicecontrol N'QUERYSTATE', N'SQLSERVERAGENT';
 --crear una clave 
-use distribution
-GO
-CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Light16082002.';
-GO
+go
 
 --configuracion de la base de datos distribution
 EXEC sp_adddistributiondb @database = 'distribution',
                           @data_folder = '/var/opt/mssql/data',
                           @log_folder = '/var/opt/mssql/log';
 
+go
 
+use distribution
+GO
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'Light16082002.';
+GO
 
--- hay que crear la ruta
---docker exec -it <nombre_o_id_del_contenedor> bash
--- mkdir -p /var/opt/mssql/ReplData
--- chmod 755 /var/opt/mssql/ReplData
-
+go
 -- Asociar el Distribuidor con el Publicador
 EXEC sp_adddistpublisher @publisher = @@SERVERNAME,
                          @distribution_db = 'distribution',
                          @security_mode = 1;
 
+go
 
---verifica datos del distribuidor
-EXEC sp_helpdistributor;
---habilitar la base de datos para la publicacion
 EXEC sp_replicationdboption 
     @dbname = 'GlobalInventoryDBExample',
     @optname = 'publish',
@@ -83,6 +81,7 @@ GO
 
 --crear un articulo
 -- se replica la tabla Product
+
 EXEC sp_addarticle 
     @publication = 'GlobalInventoryPublication',  -- El nombre de la publicación
     @article = 'Product',  -- El nombre de la tabla que deseas replicar
@@ -105,8 +104,22 @@ EXEC sp_addsubscription
     @sync_type = 'automatic';  -- Sincronización automática
 GO
 
---revisar  los datos la subscripcion 
-EXEC sp_helpsubscription @publication = 'GlobalInventoryPublication';
-GO
+
+go
 
 
+
+
+-- Respaldo completo semanal
+BACKUP DATABASE GlobalInventoryDBExample 
+TO DISK = 'backup_weekly.bak' 
+WITH FORMAT;
+go
+-- Respaldo diferencial diario
+BACKUP DATABASE GlobalInventoryDBExample 
+TO DISK = 'backup_daily.bak' 
+WITH DIFFERENTIAL;
+go
+-- Respaldo de registros de transacciones cada hora
+BACKUP LOG GlobalInventoryDBExample 
+TO DISK = 'backup_log.bak';

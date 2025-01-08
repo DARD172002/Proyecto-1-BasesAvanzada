@@ -1,14 +1,14 @@
 services:
-  sqlnode1:
+  sqlnode_1:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlnode1
+    container_name: sqlnode_1
     ports:
       - "1432:1433"
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "Light16082002."
     volumes:
-      - sqlnode1_data:/var/opt/mssql
+      - sqlnode_1_data:/var/opt/mssql
     networks:
       - sqlnetwork
     mem_limit: 4g  # Aumentar la memoria disponible para el contenedor
@@ -25,45 +25,13 @@ services:
     networks:
       - sqlnetwork
     mem_limit: 4g  # Aumentar la memoria disponible para el contenedor
-  sqlnode3:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlnode3
-    ports:
-      - "1437:1433"
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Light16082002."
-    volumes:
-      - sqlnode3_data:/var/opt/mssql
-    networks:
-      - sqlnetwork
-    mem_limit: 4g  # Aumentar la memoria disponible para el contenedor
-  sqlnode8:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlnode8
-    ports:
-      - "1441:1433"
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Light16082002."
-    volumes:
-      - sqlnode8_data:/var/opt/mssql
-    networks:
-      - sqlnetwork
-    mem_limit: 4g  # Aumentar la memoria disponible para el contenedor
-
-
-
 
 networks:
   sqlnetwork:
     driver: bridge
 volumes:
-  sqlnode1_data:
+  sqlnode_1_data:
   sqlnode2_data:
-  sqlnode3_data:
-  sqlnode8_data:
-  
-    
+
 
    
